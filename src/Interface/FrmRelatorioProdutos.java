@@ -1,6 +1,10 @@
 
 package Interface;
 
+import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class FrmRelatorioProdutos extends javax.swing.JInternalFrame {
 
     public FrmRelatorioProdutos() {
@@ -74,7 +78,16 @@ public class FrmRelatorioProdutos extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        //
+        try {
+            relatorios.RelatorioProdutos.gerarRelatorio();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmRelatorioProdutos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            setClosed(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(FrmRelatorioProdutos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton3KeyPressed
@@ -82,7 +95,11 @@ public class FrmRelatorioProdutos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton3KeyPressed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        //
+        try {
+            setClosed(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(FrmRelatorioProdutos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
 

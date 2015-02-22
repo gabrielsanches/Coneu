@@ -1,6 +1,10 @@
 
 package Interface;
 
+import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class FrmRelatorioFornecedor extends javax.swing.JInternalFrame {
 
     public FrmRelatorioFornecedor() {
@@ -12,6 +16,12 @@ public class FrmRelatorioFornecedor extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDialog1 = new javax.swing.JDialog();
+        jDialog2 = new javax.swing.JDialog();
+        jDialog3 = new javax.swing.JDialog();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
+        jFrame1 = new javax.swing.JFrame();
         jInternalFrame1 = new javax.swing.JInternalFrame();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -19,6 +29,52 @@ public class FrmRelatorioFornecedor extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
+        jDialog2.getContentPane().setLayout(jDialog2Layout);
+        jDialog2Layout.setHorizontalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog2Layout.setVerticalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jDialog3Layout = new javax.swing.GroupLayout(jDialog3.getContentPane());
+        jDialog3.getContentPane().setLayout(jDialog3Layout);
+        jDialog3Layout.setHorizontalGroup(
+            jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog3Layout.setVerticalGroup(
+            jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        jScrollPane1.setViewportView(jTree1);
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jFrame1Layout.setVerticalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setClosable(true);
         setTitle("Imprimir Relatório de Fornecedores");
@@ -154,7 +210,15 @@ public class FrmRelatorioFornecedor extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        //
+        try {
+            relatorios.RelatorioFornecedor.gerarRelatorio();
+            setClosed(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmRelatorioFornecedor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(FrmRelatorioFornecedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton3KeyPressed
@@ -162,7 +226,11 @@ public class FrmRelatorioFornecedor extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton3KeyPressed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        //
+        try {
+            setClosed(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(FrmRelatorioFornecedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
 
@@ -171,8 +239,14 @@ public class FrmRelatorioFornecedor extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JDialog jDialog1;
+    private javax.swing.JDialog jDialog2;
+    private javax.swing.JDialog jDialog3;
+    private javax.swing.JFrame jFrame1;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }

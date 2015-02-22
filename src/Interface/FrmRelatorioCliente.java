@@ -1,6 +1,10 @@
 
 package Interface;
 
+import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class FrmRelatorioCliente extends javax.swing.JInternalFrame {
 
     public FrmRelatorioCliente() {
@@ -74,7 +78,14 @@ public class FrmRelatorioCliente extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       //
+        try {
+            relatorios.RelatorioCliente.gerarRelatorio();
+            setClosed(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmRelatorioCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(FrmRelatorioCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
@@ -82,7 +93,11 @@ public class FrmRelatorioCliente extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton1KeyPressed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        //
+        try {
+            setClosed(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(FrmRelatorioCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
