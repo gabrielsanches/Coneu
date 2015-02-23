@@ -23,9 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -34,8 +32,9 @@ import javax.swing.JOptionPane;
  *
  * @author Gabriel
  */
-public class RelatorioProdutos {
-    public static void gerarRelatorio() throws ClassNotFoundException { // criação do objeto documento
+public class RelatorioVenda {
+  
+    public static void gerarRelatorio(String sql) throws ClassNotFoundException { // criação do objeto documento
         Document document = new Document(PageSize.A4, 30, 20, 20, 30);
         Connection conecta; //É o objeto que conecta com o banco de dados
         PreparedStatement pst;
@@ -44,42 +43,50 @@ public class RelatorioProdutos {
 
         OutputStream output;
         try {
-            output = new FileOutputStream("relatorios/Relatório de Produtos.pdf");
-
+            output = new FileOutputStream("relatorios/Relatório de Venda.pdf");
             try {
                 PdfWriter.getInstance(document, output);
                 document.open(); // adicionando um parágrafo ao documento 
-                document.add(new Paragraph("                                    Relatório de Produtos"));
+                document.add(new Paragraph("                                    Relatório de Venda"));
                 document.add(new Paragraph("\n"));
                 Font bfBold10 = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD, new BaseColor(0, 0, 0));
                 Font bfBold12 = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL, new BaseColor(0, 0, 0));
-                Font bf8 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
-                PdfPTable tabela = new PdfPTable(4);
+                Font bf8 = new Font(Font.FontFamily.TIMES_ROMAN, 6);
+                PdfPTable tabela = new PdfPTable(6);
                 PdfPCell cell;
-                cell = new PdfPCell(new Phrase("Nome", bfBold10));
+                cell = new PdfPCell(new Phrase("Cliente", bfBold10));
                 tabela.addCell(cell);
-                cell = new PdfPCell(new Phrase("Valor de Compra", bfBold10));
+                cell = new PdfPCell(new Phrase("Produto", bfBold10));
                 tabela.addCell(cell);
-                cell = new PdfPCell(new Phrase("Valor de Venda", bfBold10));
+                cell = new PdfPCell(new Phrase("Qtde do Produto", bfBold10));
                 tabela.addCell(cell);
-                cell = new PdfPCell(new Phrase("Qtde. em Estoque", bfBold10));
+                cell = new PdfPCell(new Phrase("Valor por Unidade", bfBold10));
+                tabela.addCell(cell);
+                cell = new PdfPCell(new Phrase("Valor Total", bfBold10));
+                tabela.addCell(cell);
+                cell = new PdfPCell(new Phrase("Data", bfBold10));
                 tabela.addCell(cell);
 
-                String sql = "Select * from produtos_float order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
                 try {
                     pst = conecta.prepareStatement(sql);
                     rs = pst.executeQuery();
                     while (rs.next()) {
-                        String fornec = rs.getString("descricao");
+                        String fornec = rs.getString("cliente");
                         cell = new PdfPCell(new Phrase(fornec, bf8));
                         tabela.addCell(cell);
-                        fornec = rs.getString("valor_compra");
+                        fornec = rs.getString("produto");
                         cell = new PdfPCell(new Phrase(fornec, bf8));
                         tabela.addCell(cell);
-                        fornec = rs.getString("valor_venda");
+                        fornec = rs.getString("quantidade");
                         cell = new PdfPCell(new Phrase(fornec, bf8));
                         tabela.addCell(cell);
-                        fornec = rs.getString("estoque");
+                        fornec = rs.getString("valorunitariovenda");
+                        cell = new PdfPCell(new Phrase(fornec, bf8));
+                        tabela.addCell(cell);
+                        fornec = rs.getString("valortotalvenda");
+                        cell = new PdfPCell(new Phrase(fornec, bf8));
+                        tabela.addCell(cell);
+                        fornec = rs.getString("data_venda");
                         cell = new PdfPCell(new Phrase(fornec, bf8));
                         tabela.addCell(cell);
                     }
@@ -95,10 +102,10 @@ public class RelatorioProdutos {
 
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(RelatorioProdutos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RelatorioVenda.class.getName()).log(Level.SEVERE, null, ex);
             System.err.println(ex.getMessage());
 
         }
 
-    }    
+    }
 }

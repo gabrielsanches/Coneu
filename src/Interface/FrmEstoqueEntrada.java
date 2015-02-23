@@ -17,56 +17,57 @@ import javax.swing.JTextField;
 import net.proteanit.sql.DbUtils;
 
 public class FrmEstoqueEntrada extends javax.swing.JInternalFrame {
+
     Connection conecta; //É o objeto que conecta com o banco de dados
     PreparedStatement pst;
     ResultSet rs;
     
-        public FrmEstoqueEntrada() throws ClassNotFoundException {
+    public FrmEstoqueEntrada() throws ClassNotFoundException {
+        
         initComponents();
+        txtCodigoProdutoEntradaEstoque.setEditable(false);
         this.setLocation(300, 65);
         conecta = ConectaBd.conectabd();
         listarProdutos();
     }
-
-    public void listarProdutos(){
+    
+    public void listarProdutos() {
         String sql = "Select codigo, descricao, valor_venda, valor_compra from produtos_float order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
             rs = pst.executeQuery();
             jTable1.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
     
-    public void pesquisarProdutos(){ //Pesquisa a DESCRIÇÃO do Produto ao começar a digitar
+    public void pesquisarProdutos() { //Pesquisa a DESCRIÇÃO do Produto ao começar a digitar
         String sql = "Select *from produtos_float where descricao like ?";
-        try{
-            pst = conecta.prepareStatement (sql);
-            pst.setString(1, jTextField1.getText()+"%");//Quando usar backspace funciona tambem por causa do %
+        try {
+            pst = conecta.prepareStatement(sql);
+            pst.setString(1, jTextField1.getText() + "%");//Quando usar backspace funciona tambem por causa do %
             rs = pst.executeQuery();
             jTable1.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog (null, error);
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
     
-    public void mostraProdutos(){ //preenche os campos do painel da venda
+    public void mostraProdutos() { //preenche os campos do painel da venda
         int seleciona = jTable1.getSelectedRow(); //mostra nos campos da tela o que clicar na tabela           
         txtCodigoProdutoEntradaEstoque.setText(jTable1.getModel().getValueAt(seleciona, 0).toString());
         txtProdutoEntradaEstoque.setText(jTable1.getModel().getValueAt(seleciona, 1).toString());
-        }
+    }
     
-    public void limparCampos(){
+    public void limparCampos() {
         txtCodigoProdutoEntradaEstoque.setText("");
         txtProdutoEntradaEstoque.setText("");        
         txtQuantidadeProdutoEntradaEstoque.setText("");
         jFormattedTextField1.setText("");
-        }
+    }
     
-    public void atualizaEstoque() throws ParseException{
+    public void atualizaEstoque() throws ParseException {
         String sql = "Insert into controle_estoque(codigoproduto_estoque_, produto_estoque_, quantidade_entrada_produto_estoque, data) values(?,?,?,?)";
         try {
             pst = conecta.prepareStatement(sql);
@@ -77,17 +78,25 @@ public class FrmEstoqueEntrada extends javax.swing.JInternalFrame {
             java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
             
             pst.setDate(4, (java.sql.Date) (sqlDate)); //tipo data
-            String s = sqlDate+"";
-            System.out.println(s);          
+            String s = sqlDate + "";
+            System.out.println(s);            
             pst.execute();
-            JOptionPane.showMessageDialog(null, "Estoque de produto atualizado com sucesso!","Mensagem",JOptionPane.INFORMATION_MESSAGE);
+            
+            sql = "Update produtos_float set descricao=?, estoque=? where codigo=?";
+            pst = conecta.prepareStatement(sql);
+            pst.setString(1, txtProdutoEntradaEstoque.getText());
+            pst.setInt(2, Integer.parseInt(txtQuantidadeProdutoEntradaEstoque.getText()));
+            pst.setInt(3, Integer.parseInt(txtCodigoProdutoEntradaEstoque.getText()));
+            pst.execute();
+//            sql = "Update produtos_float set descricao='"+txtProdutoEntradaEstoque.getText()+"', estoque="+Integer.parseInt(txtQuantidadeProdutoEntradaEstoque.getText())+" where codigo="+Integer.parseInt(txtCodigoProdutoEntradaEstoque.getText());
+//            pst.execute(sql);
+            JOptionPane.showMessageDialog(null, "Estoque de produto atualizado com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
             //listarClientes(); //atualiza a tabela sempre que um novo cliente é cadastrado      
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog(null,error);
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
-        
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
@@ -78,7 +80,7 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
 
     public void mostraProdutos() { //preenche os campos do painel da venda
         int seleciona = jTable2.getSelectedRow(); //mostra nos campos da tela o que clicar na tabela           
-        txtCodigoProdutoEfetuarVenda.setText(jTable2.getModel().getValueAt(seleciona, 0).toString());
+        codigo_produto.setText(jTable2.getModel().getValueAt(seleciona, 0).toString());
         txtProdutoEfetuarVenda.setText(jTable2.getModel().getValueAt(seleciona, 1).toString());
         valor.setText(jTable2.getModel().getValueAt(seleciona, 3).toString());
     }
@@ -86,7 +88,7 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
     public void limparCampos() {
         txtCodigoClienteEfetuarVenda.setText("");
         txtClienteEfetuarVenda.setText("");
-        txtCodigoProdutoEfetuarVenda.setText("");
+        codigo_produto.setText("");
         txtProdutoEfetuarVenda.setText("");
         quantidade_venda.setText("");
         valor.setText("");
@@ -94,7 +96,7 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
     }
 
     public void limparProduto() {
-        txtCodigoProdutoEfetuarVenda.setText("");
+        codigo_produto.setText("");
         txtProdutoEfetuarVenda.setText("");
         quantidade_venda.setText("");
         valor.setText("");
@@ -105,16 +107,21 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
     public void cadastrarVendas() {
     // Cadastra novo cliente, nenhum campo obrigatório
         // O código é gerado automaticamente pelo banco de dados, em ordem crescente a partir do 1
-        String sql = "Insert into vendas(codigocliente, cliente, codigoproduto, produto, quantidade, valorunitariovenda, valortotalvenda) values(?,?,?,?,?,?,?)";
+        String sql = "Insert into vendas(codigocliente, cliente, codigoproduto, produto, quantidade, valorunitariovenda, valortotalvenda,data_venda) values(?,?,?,?,?,?,?,?)";
         try {
             pst = conecta.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(txtCodigoClienteEfetuarVenda.getText())); //inteiro
             pst.setString(2, txtClienteEfetuarVenda.getText()); //varchar
-            pst.setInt(3, Integer.parseInt(txtCodigoProdutoEfetuarVenda.getText())); //inteiro
+            pst.setInt(3, Integer.parseInt(codigo_produto.getText())); //inteiro
             pst.setString(4, txtProdutoEfetuarVenda.getText());
             pst.setInt(5, Integer.parseInt(quantidade_venda.getText())); //inteiro
             pst.setDouble(6, Double.parseDouble(valor.getText())); //double
             pst.setDouble(7, Double.parseDouble(valor_total.getText())); //double
+            
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            java.util.Date date = new java.util.Date();
+            Timestamp t = new Timestamp(date.getTime());
+            pst.setString(8,df.format(t)); //double          
             pst.execute();
             JOptionPane.showMessageDialog(null, "Venda realizada com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
             //listarClientes(); //atualiza a tabela sempre que um novo cliente é cadastrado      
@@ -142,7 +149,7 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
         txtClienteEfetuarVenda = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        txtCodigoProdutoEfetuarVenda = new javax.swing.JTextField();
+        codigo_produto = new javax.swing.JTextField();
         txtProdutoEfetuarVenda = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtPesquisaProdutoEfetuarVenda = new javax.swing.JTextField();
@@ -162,7 +169,7 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
         setIconifiable(true);
         setTitle("Efetuar Venda");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(51, 102, 255))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 13), new java.awt.Color(51, 102, 255))); // NOI18N
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/search.png"))); // NOI18N
         jLabel2.setText("PESQUISAR");
@@ -246,15 +253,15 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Produto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(51, 102, 255))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Produto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 13), new java.awt.Color(51, 102, 255))); // NOI18N
 
         jLabel5.setText("Produto:");
 
-        txtCodigoProdutoEfetuarVenda.setBackground(new java.awt.Color(102, 102, 102));
-        txtCodigoProdutoEfetuarVenda.setEnabled(false);
-        txtCodigoProdutoEfetuarVenda.addActionListener(new java.awt.event.ActionListener() {
+        codigo_produto.setBackground(new java.awt.Color(102, 102, 102));
+        codigo_produto.setEnabled(false);
+        codigo_produto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCodigoProdutoEfetuarVendaActionPerformed(evt);
+                codigo_produtoActionPerformed(evt);
             }
         });
 
@@ -340,7 +347,7 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(txtCodigoProdutoEfetuarVenda, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(codigo_produto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(30, 30, 30)
                                         .addComponent(jLabel5))
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -362,7 +369,7 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel5)
-                    .addComponent(txtCodigoProdutoEfetuarVenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(codigo_produto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtProdutoEfetuarVenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -446,9 +453,9 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_valor_totalActionPerformed
 
-    private void txtCodigoProdutoEfetuarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoProdutoEfetuarVendaActionPerformed
+    private void codigo_produtoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codigo_produtoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtCodigoProdutoEfetuarVendaActionPerformed
+    }//GEN-LAST:event_codigo_produtoActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         cadastrarVendas();
@@ -485,6 +492,7 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField codigo_produto;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -505,7 +513,6 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
     private javax.swing.JTextField quantidade_venda;
     private javax.swing.JTextField txtClienteEfetuarVenda;
     private javax.swing.JTextField txtCodigoClienteEfetuarVenda;
-    private javax.swing.JTextField txtCodigoProdutoEfetuarVenda;
     private javax.swing.JTextField txtPesquisaClienteEfetuarVenda;
     private javax.swing.JTextField txtPesquisaProdutoEfetuarVenda;
     private javax.swing.JTextField txtProdutoEfetuarVenda;

@@ -436,14 +436,22 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem20ActionPerformed
         FrmRelatorioCompra form = null;
-        form = new FrmRelatorioCompra();
+        try {
+            form = new FrmRelatorioCompra();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         form.setVisible(true);
         jDesktopPane1.add(form);
     }//GEN-LAST:event_jMenuItem20ActionPerformed
 
     private void jMenuItem21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem21ActionPerformed
         FrmRelatorioVenda form = null;
-        form = new FrmRelatorioVenda();
+        try {
+            form = new FrmRelatorioVenda();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         form.setVisible(true);
         jDesktopPane1.add(form);
     }//GEN-LAST:event_jMenuItem21ActionPerformed

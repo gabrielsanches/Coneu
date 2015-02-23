@@ -5,14 +5,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
+
     Connection conecta; //É o objeto que conecta com o banco de dados
     PreparedStatement pst;
     ResultSet rs;
-    
+
     public FrmEfetuarCompra() throws ClassNotFoundException {
         initComponents();
         this.setLocation(300, 65);
@@ -21,95 +26,91 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
         listarFornecedores();
         valor_total.setEditable(false);
     }
-    
+
     //Métodos para o painel 'Fornecedor'
-    public void listarFornecedores(){
+    public void listarFornecedores() {
         String sql = "Select *from fornecedores order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
             rs = pst.executeQuery();
             jTable1.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void pesquisarFornecedores(){ //Pesquisa o NOME do fornecedor ao começar a digitar
+
+    public void pesquisarFornecedores() { //Pesquisa o NOME do fornecedor ao começar a digitar
         String sql = "Select *from fornecedores where fornecedor like ?";
-        try{
-            pst = conecta.prepareStatement (sql);
-            pst.setString(1, txtPesquisaFornecedorEfetuarCompra.getText()+"%");//Quando usar backspace funciona tambem por causa do %
+        try {
+            pst = conecta.prepareStatement(sql);
+            pst.setString(1, txtPesquisaFornecedorEfetuarCompra.getText() + "%");//Quando usar backspace funciona tambem por causa do %
             rs = pst.executeQuery();
             jTable1.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog (null, error);
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void mostraFornecedores(){ //preenche os campos do painel da venda
+
+    public void mostraFornecedores() { //preenche os campos do painel da venda
         int seleciona = jTable1.getSelectedRow(); //mostra nos campos da tela o que clicar na tabela           
         txtCodigoFornecedorEfetuarCompra.setText(jTable1.getModel().getValueAt(seleciona, 0).toString());
         txtFornecedorEfetuarCompra.setText(jTable1.getModel().getValueAt(seleciona, 1).toString());
     }
 
 //Métodos para o painel 'Produto'
-    public void listarProdutos(){
+    public void listarProdutos() {
         String sql = "Select *from produtos_float order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
             rs = pst.executeQuery();
             jTable2.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void pesquisarProdutos(){ //Pesquisa a DESCRIÇÃO do Produto ao começar a digitar
+
+    public void pesquisarProdutos() { //Pesquisa a DESCRIÇÃO do Produto ao começar a digitar
         String sql = "Select *from produtos_float where descricao like ?";
-        try{
-            pst = conecta.prepareStatement (sql);
-            pst.setString(1, txtPesquisaProdutoEfetuarCompra.getText()+"%");//Quando usar backspace funciona tambem por causa do %
+        try {
+            pst = conecta.prepareStatement(sql);
+            pst.setString(1, txtPesquisaProdutoEfetuarCompra.getText() + "%");//Quando usar backspace funciona tambem por causa do %
             rs = pst.executeQuery();
             jTable2.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog (null, error);
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void mostraProdutos(){ //preenche os campos do painel da venda
+
+    public void mostraProdutos() { //preenche os campos do painel da venda
         int seleciona = jTable2.getSelectedRow(); //mostra nos campos da tela o que clicar na tabela           
         txtCodigoProdutoEfetuarCompra.setText(jTable2.getModel().getValueAt(seleciona, 0).toString());
         txtProdutoEfetuarCompra.setText(jTable2.getModel().getValueAt(seleciona, 1).toString());
         valor.setText(jTable2.getModel().getValueAt(seleciona, 2).toString());
     }
-    
-    public void limparCampos(){
+
+    public void limparCampos() {
         txtCodigoFornecedorEfetuarCompra.setText("");
-        txtFornecedorEfetuarCompra.setText("");        
+        txtFornecedorEfetuarCompra.setText("");
         txtCodigoProdutoEfetuarCompra.setText("");
         txtProdutoEfetuarCompra.setText("");
         quantidade_produto.setText("");
         valor.setText("");
         valor_total.setText("");
     }
-    
-    public void limparProduto (){
+
+    public void limparProduto() {
         txtCodigoProdutoEfetuarCompra.setText("");
         txtProdutoEfetuarCompra.setText("");
         quantidade_produto.setText("");
         valor.setText("");
         valor_total.setText("");
     }
-    
+
     //Método para concluir e armazenar nova compra
-    public void cadastrarCompras(){ 
-    // Cadastra novo cliente, nenhum campo obrigatório
-    // O código é gerado automaticamente pelo banco de dados, em ordem crescente a partir do 1
-        String sql = "Insert into compras(codigofornecedor, fornecedor, codigoproduto, produto, quantidade, valorunitariocompra, valortotalcompra) values(?,?,?,?,?,?,?)";
+    public void cadastrarCompras() {
+        // Cadastra novo cliente, nenhum campo obrigatório
+        // O código é gerado automaticamente pelo banco de dados, em ordem crescente a partir do 1
+        String sql = "Insert into compras(codigofornecedor, fornecedor, codigoproduto, produto, quantidade, valorunitariocompra, valortotalcompra, data_compra) values(?,?,?,?,?,?,?,?)";
         try {
             pst = conecta.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(txtCodigoFornecedorEfetuarCompra.getText())); //inteiro
@@ -119,12 +120,15 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
             pst.setInt(5, Integer.parseInt(quantidade_produto.getText())); //inteiro
             pst.setDouble(6, Double.parseDouble(valor.getText())); //double
             pst.setDouble(7, Double.parseDouble(valor_total.getText())); //double
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            java.util.Date date = new java.util.Date();
+            Timestamp t = new Timestamp(date.getTime());
+            pst.setString(8,df.format(t)); //double
             pst.execute();
-            JOptionPane.showMessageDialog(null, "Compra realizada com sucesso!","Mensagem",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Compra realizada com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
             //listarClientes(); //atualiza a tabela sempre que um novo cliente é cadastrado      
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog(null,error);
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
 
@@ -499,9 +503,9 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_quantidade_produtoKeyReleased
 
     private void calcular_valor() {
-        valor_total.setText(Float.toString(Float.parseFloat(quantidade_produto.getText())*Float.parseFloat(valor.getText())));
+        valor_total.setText(Float.toString(Float.parseFloat(quantidade_produto.getText()) * Float.parseFloat(valor.getText())));
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -530,6 +534,5 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
     private javax.swing.JTextField valor;
     private javax.swing.JTextField valor_total;
     // End of variables declaration//GEN-END:variables
-
 
 }

@@ -1,11 +1,27 @@
 
 package Interface;
 
+import DAL.ConectaBd;
+import java.beans.PropertyVetoException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import net.proteanit.sql.DbUtils;
+
 public class FrmRelatorioVenda extends javax.swing.JInternalFrame {
 
-    public FrmRelatorioVenda() {
+    Connection conecta; //É o objeto que conecta com o banco de dados
+    PreparedStatement pst;
+    ResultSet rs;    
+    
+    public FrmRelatorioVenda() throws ClassNotFoundException {
         initComponents();
         this.setLocation(400, 150);
+        conecta = ConectaBd.conectabd();
     }
 
     @SuppressWarnings("unchecked")
@@ -83,6 +99,11 @@ public class FrmRelatorioVenda extends javax.swing.JInternalFrame {
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setText("OK");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -143,13 +164,41 @@ public class FrmRelatorioVenda extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jFormattedTextField2ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        String sql = "Select *from vendas where data_venda between '"+jFormattedTextField1.getText()+"' and '"+jFormattedTextField2.getText()+"' order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
+        try {
+            relatorios.RelatorioVenda.gerarRelatorio(sql);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmRelatorioVenda.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            setClosed(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(FrmRelatorioVenda.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-
+        try {
+            setClosed(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(FrmRelatorioVenda.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        listarVendas();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+        public void listarVendas() {
+        String sql = "Select *from vendas where data_venda between '"+jFormattedTextField1.getText()+"' and '"+jFormattedTextField2.getText()+"' order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
+        try {
+            pst = conecta.prepareStatement(sql);
+            rs = pst.executeQuery();
+            jTable1.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
