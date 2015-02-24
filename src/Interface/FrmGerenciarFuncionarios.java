@@ -40,24 +40,34 @@ public class FrmGerenciarFuncionarios extends javax.swing.JInternalFrame {
     }
 
     public void cadastrarFuncionarios() {
-        String sql = "Insert into funcionarios(nome, telefone) values('"+txtNomeFuncionario.getText()+"','"+txtTelefoneFuncionario.getText()+"') returning codigo";
-        try {
-            Statement comando = conecta.createStatement();
-            ResultSet rs = comando.executeQuery(sql);
-            rs.next();
-            int codigo = rs.getInt("codigo");
-            
-            sql = "Insert into login(usuario, senha,id_funcionario) values(?,?,?)";
-            pst = conecta.prepareStatement(sql);
-            pst.setString(1, txtUsuarioFuncionario.getText());
-            pst.setString(2, jPasswordField1.getText());
-            pst.setInt(3, codigo);
-            pst.execute();
-            
-            JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
-            listarFuncionarios(); //atualiza a tabela sempre que um novo funcionario é cadastrado      
-        } catch (SQLException error) {
-            JOptionPane.showMessageDialog(null, error);
+        String sql = "Insert into funcionarios(nome, telefone) values('" + txtNomeFuncionario.getText() + "','" + txtTelefoneFuncionario.getText() + "') returning codigo";
+        if (txtUsuarioFuncionario.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Usuario em branco!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            if (jPasswordField1.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Senha em branco!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+
+                try {
+
+                    Statement comando = conecta.createStatement();
+                    ResultSet rs = comando.executeQuery(sql);
+                    rs.next();
+                    int codigo = rs.getInt("codigo");
+
+                    sql = "Insert into login(usuario, senha,id_funcionario) values(?,?,?)";
+                    pst = conecta.prepareStatement(sql);
+                    pst.setString(1, txtUsuarioFuncionario.getText());
+                    pst.setString(2, jPasswordField1.getText());
+                    pst.setInt(3, codigo);
+                    pst.execute();
+
+                    JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+                    listarFuncionarios(); //atualiza a tabela sempre que um novo funcionario é cadastrado      
+                } catch (SQLException error) {
+                    JOptionPane.showMessageDialog(null, error);
+                }
+            }
         }
     }
 
@@ -83,7 +93,21 @@ public class FrmGerenciarFuncionarios extends javax.swing.JInternalFrame {
     }
 
     public void deletarFuncionarios() {
-        String sql = "Delete from funcionarios where codigo = ?"; //se usar *from ele deleta todos os clientes!! 
+
+        String sql = "Delete from funcionarios where codigo = ?"; //se usar *from ele deleta todos os funcionarios!! 
+        try {
+            pst = conecta.prepareStatement(sql);
+            pst.setInt(1, Integer.parseInt(txtCodigoFuncionario.getText()));
+            pst.execute();
+            listarFuncionarios();
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
+        }
+    }
+
+    public void deletarFuncionariosLogin() {
+
+        String sql = "Delete from login where id_funcionario = ?"; //se usar *from ele deleta todos os funcionarios!! 
         try {
             pst = conecta.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(txtCodigoFuncionario.getText()));
@@ -175,6 +199,11 @@ public class FrmGerenciarFuncionarios extends javax.swing.JInternalFrame {
 
         txtCodigoFuncionario.setBackground(new java.awt.Color(102, 102, 102));
         txtCodigoFuncionario.setEnabled(false);
+        txtCodigoFuncionario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodigoFuncionarioActionPerformed(evt);
+            }
+        });
 
         jPasswordField1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -350,6 +379,7 @@ public class FrmGerenciarFuncionarios extends javax.swing.JInternalFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         deletarFuncionarios();
+        deletarFuncionariosLogin();
         limparCampos();
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -378,6 +408,10 @@ public class FrmGerenciarFuncionarios extends javax.swing.JInternalFrame {
     private void txtUsuarioFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioFuncionarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuarioFuncionarioActionPerformed
+
+    private void txtCodigoFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoFuncionarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCodigoFuncionarioActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
