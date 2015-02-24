@@ -540,7 +540,7 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_quantidade_produtoKeyReleased
 
     private void calcular_valor() {
-        if (quantidade_produto.getText().equals("") || valor.getText().equals(""))
+        if (!quantidade_produto.getText().equals("") && !valor.getText().equals(""))
             valor_total.setText(Float.toString(Float.parseFloat(quantidade_produto.getText()) * Float.parseFloat(valor.getText())));
     }
 

@@ -145,7 +145,7 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
     }
 
     private void calcular_valor() {
-        if (quantidade_venda.getText().equals("") || valor.getText().equals(""))
+        if (!quantidade_venda.getText().equals("") && !valor.getText().equals(""))
             valor_total.setText(Float.toString(Float.parseFloat(quantidade_venda.getText()) * Float.parseFloat(valor.getText())));
     }
 
