@@ -138,7 +138,7 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
                     pst.execute();
                     JOptionPane.showMessageDialog(null, "Compra realizada com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
                     //listarClientes(); //atualiza a tabela sempre que um novo cliente é cadastrado   
-                    baixaCompra();
+                    //baixaCompra();
                 }
 
             }
@@ -515,7 +515,7 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
         limparProduto();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public void baixaCompra() {
+    /*public void baixaCompra() {
         String sql = "select estoque from produtos_float where codigo=" + Integer.parseInt(txtCodigoProdutoEfetuarCompra.getText());
         int estoque;
         try {
@@ -533,7 +533,7 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             Logger.getLogger(FrmEfetuarVenda.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     private void quantidade_produtoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantidade_produtoKeyReleased
         calcular_valor();
