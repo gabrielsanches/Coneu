@@ -5,8 +5,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
@@ -83,6 +86,7 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
         codigo_produto.setText(jTable2.getModel().getValueAt(seleciona, 0).toString());
         txtProdutoEfetuarVenda.setText(jTable2.getModel().getValueAt(seleciona, 1).toString());
         valor.setText(jTable2.getModel().getValueAt(seleciona, 3).toString());
+        calcular_valor();
     }
 
     public void limparCampos() {
@@ -105,26 +109,36 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
 
 //Método para concluir e armazenar nova venda
     public void cadastrarVendas() {
-    // Cadastra novo cliente, nenhum campo obrigatório
+        // Cadastra novo cliente, nenhum campo obrigatório
         // O código é gerado automaticamente pelo banco de dados, em ordem crescente a partir do 1
         String sql = "Insert into vendas(codigocliente, cliente, codigoproduto, produto, quantidade, valorunitariovenda, valortotalvenda,data_venda) values(?,?,?,?,?,?,?,?)";
         try {
             pst = conecta.prepareStatement(sql);
-            pst.setInt(1, Integer.parseInt(txtCodigoClienteEfetuarVenda.getText())); //inteiro
-            pst.setString(2, txtClienteEfetuarVenda.getText()); //varchar
-            pst.setInt(3, Integer.parseInt(codigo_produto.getText())); //inteiro
-            pst.setString(4, txtProdutoEfetuarVenda.getText());
-            pst.setInt(5, Integer.parseInt(quantidade_venda.getText())); //inteiro
-            pst.setDouble(6, Double.parseDouble(valor.getText())); //double
-            pst.setDouble(7, Double.parseDouble(valor_total.getText())); //double
-            
-            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            java.util.Date date = new java.util.Date();
-            Timestamp t = new Timestamp(date.getTime());
-            pst.setString(8,df.format(t)); //double          
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Venda realizada com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
-            //listarClientes(); //atualiza a tabela sempre que um novo cliente é cadastrado      
+            if (txtCodigoClienteEfetuarVenda.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Precisa ser escolhido um cliente!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                if (quantidade_venda.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Quantidade de produtos nescessária!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    pst.setInt(1, Integer.parseInt(txtCodigoClienteEfetuarVenda.getText())); //inteiro
+                    pst.setString(2, txtClienteEfetuarVenda.getText()); //varchar
+                    pst.setInt(3, Integer.parseInt(codigo_produto.getText())); //inteiro
+                    pst.setString(4, txtProdutoEfetuarVenda.getText());
+                    pst.setInt(5, Integer.parseInt(quantidade_venda.getText())); //inteiro
+                    pst.setDouble(6, Double.parseDouble(valor.getText())); //double
+                    pst.setDouble(7, Double.parseDouble(valor_total.getText())); //double
+
+                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    java.util.Date date = new java.util.Date();
+                    Timestamp t = new Timestamp(date.getTime());
+                    pst.setString(8, df.format(t)); //double          
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Venda realizada com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+                    //listarClientes(); //atualiza a tabela sempre que um novo cliente é cadastrado      
+                    baixaCompra();
+                }
+
+            }
         } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
@@ -459,8 +473,29 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         cadastrarVendas();
+
         limparProduto();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    public void baixaCompra() {
+        String sql = "select estoque from produtos_float where codigo=" + Integer.parseInt(codigo_produto.getText());
+        int estoque;
+        try {
+            Statement comando = conecta.createStatement();
+            ResultSet rs = comando.executeQuery(sql);
+            rs.next();
+            estoque = rs.getInt(1);
+
+            sql = "Update produtos_float set estoque=? where codigo=?";
+
+            pst = conecta.prepareStatement(sql);
+            pst.setInt(1, estoque - Integer.parseInt(quantidade_venda.getText()));
+            pst.setInt(2, Integer.parseInt(codigo_produto.getText()));
+            pst.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmEfetuarVenda.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     private void txtPesquisaClienteEfetuarVendaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisaClienteEfetuarVendaKeyReleased
         pesquisarClientes();

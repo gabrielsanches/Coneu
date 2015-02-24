@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -68,8 +69,16 @@ public class FrmEstoqueEntrada extends javax.swing.JInternalFrame {
     }
     
     public void atualizaEstoque() throws ParseException {
-        String sql = "Insert into controle_estoque(codigoproduto_estoque_, produto_estoque_, quantidade_entrada_produto_estoque, data) values(?,?,?,?)";
+        String sql = "select estoque from produtos_float where codigo=" + Integer.parseInt(txtCodigoProdutoEntradaEstoque.getText());
+        int estoque;
+        
         try {
+            Statement comando = conecta.createStatement();
+            ResultSet rs = comando.executeQuery(sql);
+            rs.next();
+            estoque = rs.getInt(1);
+        
+            sql = "Insert into controle_estoque(codigoproduto_estoque_, produto_estoque_, quantidade_entrada_produto_estoque, data) values(?,?,?,?)";
             pst = conecta.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(txtCodigoProdutoEntradaEstoque.getText())); //inteiro
             pst.setString(2, txtProdutoEntradaEstoque.getText());
@@ -85,7 +94,7 @@ public class FrmEstoqueEntrada extends javax.swing.JInternalFrame {
             sql = "Update produtos_float set descricao=?, estoque=? where codigo=?";
             pst = conecta.prepareStatement(sql);
             pst.setString(1, txtProdutoEntradaEstoque.getText());
-            pst.setInt(2, Integer.parseInt(txtQuantidadeProdutoEntradaEstoque.getText()));
+            pst.setInt(2, estoque + Integer.parseInt(txtQuantidadeProdutoEntradaEstoque.getText()));
             pst.setInt(3, Integer.parseInt(txtCodigoProdutoEntradaEstoque.getText()));
             pst.execute();
 //            sql = "Update produtos_float set descricao='"+txtProdutoEntradaEstoque.getText()+"', estoque="+Integer.parseInt(txtQuantidadeProdutoEntradaEstoque.getText())+" where codigo="+Integer.parseInt(txtCodigoProdutoEntradaEstoque.getText());
@@ -121,7 +130,7 @@ public class FrmEstoqueEntrada extends javax.swing.JInternalFrame {
         setIconifiable(true);
         setTitle("Estoque Entrada de Produtos");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Entrada de Produtos no Estoque", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(51, 102, 255))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Entrada de Produtos no Estoque", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 13), new java.awt.Color(51, 102, 255))); // NOI18N
 
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -152,6 +161,11 @@ public class FrmEstoqueEntrada extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Código Produto:");
 
+        txtCodigoProdutoEntradaEstoque.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodigoProdutoEntradaEstoqueActionPerformed(evt);
+            }
+        });
         txtCodigoProdutoEntradaEstoque.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtCodigoProdutoEntradaEstoqueKeyReleased(evt);
@@ -298,6 +312,10 @@ public class FrmEstoqueEntrada extends javax.swing.JInternalFrame {
     private void txtCodigoProdutoEntradaEstoqueKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoProdutoEntradaEstoqueKeyReleased
         
     }//GEN-LAST:event_txtCodigoProdutoEntradaEstoqueKeyReleased
+
+    private void txtCodigoProdutoEntradaEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoProdutoEntradaEstoqueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCodigoProdutoEntradaEstoqueActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

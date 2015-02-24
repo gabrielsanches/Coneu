@@ -6,72 +6,74 @@ import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 //import Utilidades.EncriptaSenha;
 /*import DAL.ConectaBd;
-import Utilidades.EncriptaSenha;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
-import net.proteanit.sql.DbUtils;*/
+ import Utilidades.EncriptaSenha;
+ import java.sql.Connection;
+ import java.sql.PreparedStatement;
+ import java.sql.ResultSet;
+ import java.sql.SQLException;
+ import javax.swing.JOptionPane;
+ import net.proteanit.sql.DbUtils;*/
 
 //Uma vez criado o funcionário ele não poderá ser editado, apenas deletado.
-
 public class FrmGerenciarFuncionarios extends javax.swing.JInternalFrame {
+
     Connection conecta; //É o objeto que conecta com o banco de dados
     PreparedStatement pst;
     ResultSet rs;
-    
-        public FrmGerenciarFuncionarios() throws ClassNotFoundException {
+
+    public FrmGerenciarFuncionarios() throws ClassNotFoundException {
         initComponents();
         this.setLocation(300, 100);
         conecta = ConectaBd.conectabd();
         listarFuncionarios(); //chama a tabela de FUNCIONARIOS sempre que abre o formulario
     }
-        
-     public void listarFuncionarios(){
+
+    public void listarFuncionarios() {
         String sql = "Select *from funcionarios order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
             rs = pst.executeQuery();
             tblFuncionarios.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-     
-     public void cadastrarFuncionarios(){ 
-        String sql = "Insert into funcionarios(nome, telefone, usuario, senha) values(?,?,?,?)";
+
+    public void cadastrarFuncionarios() {
+        String sql = "Insert into funcionarios(nome, telefone) values('"+txtNomeFuncionario.getText()+"','"+txtTelefoneFuncionario.getText()+"') returning codigo";
+        try {
+            Statement comando = conecta.createStatement();
+            ResultSet rs = comando.executeQuery(sql);
+            rs.next();
+            int codigo = rs.getInt("codigo");
+            
+            sql = "Insert into login(usuario, senha,id_funcionario) values(?,?,?)";
+            pst = conecta.prepareStatement(sql);
+            pst.setString(1, txtUsuarioFuncionario.getText());
+            pst.setString(2, jPasswordField1.getText());
+            pst.setInt(3, codigo);
+            pst.execute();
+            
+            JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+            listarFuncionarios(); //atualiza a tabela sempre que um novo funcionario é cadastrado      
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
+        }
+    }
+
+    public void pesquisarUsuarios() { //Pesquisa o NOME do funcionario ao começar a digitar
+        String sql = "Select *from funcionarios where nome like ?";
         try {
             pst = conecta.prepareStatement(sql);
-            pst.setString(1, txtNomeFuncionario.getText());
-            pst.setString(2, txtTelefoneFuncionario.getText());
-            pst.setString(3, txtUsuarioFuncionario.getText());
-            pst.setString(4, jPasswordField1.getText());
-            
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!","Mensagem",JOptionPane.INFORMATION_MESSAGE);
-            listarFuncionarios(); //atualiza a tabela sempre que um novo funcionario é cadastrado      
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog(null,error);
-        }
-    }
-     
-    public void pesquisarUsuarios(){ //Pesquisa o NOME do funcionario ao começar a digitar
-        String sql = "Select *from funcionarios where nome like ?";
-        try{
-            pst = conecta.prepareStatement (sql);
-            pst.setString(1, txtPesquisarFuncionarios.getText()+"%");//Quando usar backspace funciona tambem por causa do %
+            pst.setString(1, txtPesquisarFuncionarios.getText() + "%");//Quando usar backspace funciona tambem por causa do %
             rs = pst.executeQuery();
             tblFuncionarios.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog (null, error);
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void mostraItens(){ //preenche os campos de determinado usuario ao clicar sobre ele
+
+    public void mostraItens() { //preenche os campos de determinado usuario ao clicar sobre ele
         int seleciona = tblFuncionarios.getSelectedRow(); //mostra nos campos da tela o que clicar na tabela           
         txtCodigoFuncionario.setText(tblFuncionarios.getModel().getValueAt(seleciona, 0).toString());
         txtNomeFuncionario.setText(tblFuncionarios.getModel().getValueAt(seleciona, 1).toString());
@@ -79,21 +81,20 @@ public class FrmGerenciarFuncionarios extends javax.swing.JInternalFrame {
         txtUsuarioFuncionario.setText(tblFuncionarios.getModel().getValueAt(seleciona, 3).toString());
         jPasswordField1.setText(tblFuncionarios.getModel().getValueAt(seleciona, 4).toString());
     }
-    
-    public void deletarFuncionarios(){
+
+    public void deletarFuncionarios() {
         String sql = "Delete from funcionarios where codigo = ?"; //se usar *from ele deleta todos os clientes!! 
         try {
             pst = conecta.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(txtCodigoFuncionario.getText()));
             pst.execute();
             listarFuncionarios();
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void limparCampos(){
+
+    public void limparCampos() {
         txtCodigoFuncionario.setText("");
         txtNomeFuncionario.setText("");
         txtTelefoneFuncionario.setText("");
@@ -178,6 +179,12 @@ public class FrmGerenciarFuncionarios extends javax.swing.JInternalFrame {
         jPasswordField1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jPasswordField1FocusLost(evt);
+            }
+        });
+
+        txtUsuarioFuncionario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsuarioFuncionarioActionPerformed(evt);
             }
         });
 
@@ -367,6 +374,10 @@ public class FrmGerenciarFuncionarios extends javax.swing.JInternalFrame {
         limparCampos();
         mostraItens();
     }//GEN-LAST:event_tblFuncionariosMouseClicked
+
+    private void txtUsuarioFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioFuncionarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsuarioFuncionarioActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

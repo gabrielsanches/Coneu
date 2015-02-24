@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 public class FrmLogin extends javax.swing.JFrame {
     
+    boolean acesso_gerenciar=false;
     Connection con = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -17,7 +18,7 @@ public class FrmLogin extends javax.swing.JFrame {
     }
     
     public void Logar(){
-        String sql = "Select *from login where usuario = ? and senha = ?";
+        String sql = "Select * from login where usuario = ? and senha = ?";
         try {
             pst = con.prepareStatement(sql);
             pst.setString(1, txtUsuario.getText());
@@ -26,7 +27,12 @@ public class FrmLogin extends javax.swing.JFrame {
             rs = pst.executeQuery();
             
             if(rs.next()){
-                FrmPrincipal frm = new FrmPrincipal();
+                if (rs.getBoolean("acesso_gerenciar")==true){
+                    acesso_gerenciar = true;
+                }else{
+                    acesso_gerenciar = false;
+                }
+                FrmPrincipal frm = new FrmPrincipal(acesso_gerenciar);
                 frm.setVisible(true);
                 dispose();
             }else{

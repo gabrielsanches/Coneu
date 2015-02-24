@@ -2,14 +2,18 @@ package Interface;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class FrmPrincipal extends javax.swing.JFrame {
 
-    public FrmPrincipal() {
+    boolean acesso = false;
+
+    public FrmPrincipal(boolean acesso_gerenciar) {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
+        acesso = acesso_gerenciar;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -43,8 +47,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jMenuItem20 = new javax.swing.JMenuItem();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
         jMenuItem21 = new javax.swing.JMenuItem();
-        jSeparator9 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem22 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
 
@@ -239,15 +241,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
             }
         });
         jMenu5.add(jMenuItem21);
-        jMenu5.add(jSeparator9);
-
-        jMenuItem22.setText("Compra e Venda");
-        jMenuItem22.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem22ActionPerformed(evt);
-            }
-        });
-        jMenu5.add(jMenuItem22);
 
         jMenuBar1.add(jMenu5);
 
@@ -272,7 +265,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
+            .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,6 +282,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+
         FrmGerenciarClientes form = null;
         try {
             form = new FrmGerenciarClientes();
@@ -297,6 +291,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
         }
         form.setVisible(true);
         jDesktopPane1.add(form);
+
+
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -311,29 +307,37 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        FrmGerenciarFuncionarios form = null;
-        try {
-            form = new FrmGerenciarFuncionarios();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        if (acesso == false) {
+            JOptionPane.showMessageDialog(null, "Usuário não possui acesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            FrmGerenciarFuncionarios form = null;
+            try {
+                form = new FrmGerenciarFuncionarios();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            form.setVisible(true);
+            jDesktopPane1.add(form);
         }
-        form.setVisible(true);
-        jDesktopPane1.add(form);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
-        
+
     }//GEN-LAST:event_jMenu1ActionPerformed
 
     private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
-        FrmGerenciarProdutos form = null;
-        try {
-            form = new FrmGerenciarProdutos();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        if (acesso == false) {
+            JOptionPane.showMessageDialog(null, "Usuário não possui acesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            FrmGerenciarProdutos form = null;
+            try {
+                form = new FrmGerenciarProdutos();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            form.setVisible(true);
+            jDesktopPane1.add(form);
         }
-        form.setVisible(true);
-        jDesktopPane1.add(form);
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
     private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
@@ -370,25 +374,34 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
-        FrmGerenciarVendas form = null;
-        try {
-            form = new FrmGerenciarVendas();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        if (acesso == false) {
+            JOptionPane.showMessageDialog(null, "Usuário possui acesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            FrmGerenciarVendas form = null;
+            try {
+                form = new FrmGerenciarVendas();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            form.setVisible(true);
+            jDesktopPane1.add(form);
         }
-        form.setVisible(true);
-        jDesktopPane1.add(form);
     }//GEN-LAST:event_jMenuItem15ActionPerformed
 
     private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
-        FrmGerenciarCompras form = null;
-        try {
-            form = new FrmGerenciarCompras();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        if (acesso == false) {
+            JOptionPane.showMessageDialog(null, "Usuário possui acesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+
+            FrmGerenciarCompras form = null;
+            try {
+                form = new FrmGerenciarCompras();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            form.setVisible(true);
+            jDesktopPane1.add(form);
         }
-        form.setVisible(true);
-        jDesktopPane1.add(form);
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
@@ -456,20 +469,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jDesktopPane1.add(form);
     }//GEN-LAST:event_jMenuItem21ActionPerformed
 
-    private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem22ActionPerformed
-        FrmRelatorioCompraVenda form = null;
-        form = new FrmRelatorioCompraVenda();
-        form.setVisible(true);
-        jDesktopPane1.add(form);
-    }//GEN-LAST:event_jMenuItem22ActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmPrincipal().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDesktopPane1;
@@ -491,7 +490,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem20;
     private javax.swing.JMenuItem jMenuItem21;
-    private javax.swing.JMenuItem jMenuItem22;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
@@ -504,6 +502,5 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JPopupMenu.Separator jSeparator8;
-    private javax.swing.JPopupMenu.Separator jSeparator9;
     // End of variables declaration//GEN-END:variables
 }
