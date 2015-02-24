@@ -5,68 +5,69 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 public class FrmGerenciarVendas extends javax.swing.JInternalFrame {
+
     Connection conecta; //É o objeto que conecta com o banco de dados
     PreparedStatement pst;
     ResultSet rs;
-    
+
     public FrmGerenciarVendas() throws ClassNotFoundException {
         initComponents();
         this.setLocation(200, 90);
         conecta = ConectaBd.conectabd();
         listarVendas();
     }
-    
-    public void listarVendas(){
+
+    public void listarVendas() {
         String sql = "Select *from vendas order by codigo Asc";
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
             rs = pst.executeQuery();
             jTableGerenciarVendas.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void pesquisarVendas(){
+
+    public void pesquisarVendas() {
         String sql = "Select *from vendas where cliente like ?";
-        try{
-            pst = conecta.prepareStatement (sql);
-            pst.setString(1, txtPesquisarVendas.getText()+"%");//Quando usar backspace funciona tambem por causa do %
+        try {
+            pst = conecta.prepareStatement(sql);
+            pst.setString(1, txtPesquisarVendas.getText() + "%");//Quando usar backspace funciona tambem por causa do %
             rs = pst.executeQuery();
             jTableGerenciarVendas.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog (null, error);
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void deletarVendas(){
+
+    public void deletarVendas() {
         String sql = "Delete from vendas where codigo = ?"; //se usar *from ele deleta todos os clientes!! 
         try {
             pst = conecta.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(txtCodigoVendaGerenciarVendas.getText()));
             pst.execute();
             listarVendas();
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void mostraCodigo(){ //mostra o código da venda ao usuario selecionar a venda na tabela
+
+    public void mostraCodigo() { //mostra o código da venda ao usuario selecionar a venda na tabela
         int seleciona = jTableGerenciarVendas.getSelectedRow();
         txtCodigoVendaGerenciarVendas.setText(jTableGerenciarVendas.getModel().getValueAt(seleciona, 0).toString());
     }
-    
-    public void limparCampos(){
+
+    public void limparCampos() {
         txtCodigoVendaGerenciarVendas.setText("");
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -204,14 +205,41 @@ public class FrmGerenciarVendas extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtPesquisarVendasKeyReleased
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        baixaExcluiVenda();
         deletarVendas();
         JOptionPane.showMessageDialog(null, "Venda excluída com sucesso");
         limparCampos();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTableGerenciarVendasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableGerenciarVendasMouseClicked
-       mostraCodigo();
+        mostraCodigo();
     }//GEN-LAST:event_jTableGerenciarVendasMouseClicked
+
+    public void baixaExcluiVenda() {
+        String sql = "select codigoproduto,quantidade from vendas where codigo=" + Integer.parseInt(txtCodigoVendaGerenciarVendas.getText());
+        int cod_produto,quantidade_produto;
+        int estoque;
+        try {
+            Statement comando = conecta.createStatement();
+            ResultSet rs = comando.executeQuery(sql);
+            rs.next();
+            cod_produto = rs.getInt("codigoproduto");
+            quantidade_produto = rs.getInt("quantidade");
+            
+            sql = "select estoque from produtos_float where codigo="+cod_produto;
+            rs = comando.executeQuery(sql);
+            rs.next();
+            estoque = rs.getInt("estoque");            
+            
+            sql = "Update produtos_float set estoque=? where codigo=?";
+            pst = conecta.prepareStatement(sql);
+            pst.setInt(1, estoque + quantidade_produto);
+            pst.setInt(2, cod_produto);
+            pst.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmGerenciarVendas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

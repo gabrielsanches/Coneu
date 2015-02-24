@@ -6,7 +6,7 @@ public class ConectaBd {
     public static Connection conectabd() throws ClassNotFoundException{
         try {
            Class.forName("org.postgresql.Driver");
-           Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Coneu","postgres","pop080470");
+           Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Coneu","postgres","postgres");
            return con;
         }
         catch(SQLException error) {
