@@ -4,6 +4,7 @@ package Interface;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class FrmRelatorioFornecedor extends javax.swing.JInternalFrame {
 
@@ -212,6 +213,7 @@ public class FrmRelatorioFornecedor extends javax.swing.JInternalFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
             relatorios.RelatorioFornecedor.gerarRelatorio();
+            JOptionPane.showMessageDialog(null, "Relatorio gerado com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
             setClosed(true);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrmRelatorioFornecedor.class.getName()).log(Level.SEVERE, null, ex);

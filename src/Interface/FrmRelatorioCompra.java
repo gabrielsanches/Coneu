@@ -180,6 +180,7 @@ public class FrmRelatorioCompra extends javax.swing.JInternalFrame {
         try {
             String sql = "Select *from compras where data_compra between '"+jFormattedTextField1.getText()+"' and '"+jFormattedTextField2.getText()+"' order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
             relatorios.RelatorioCompra.gerarRelatorio(sql);
+            JOptionPane.showMessageDialog(null, "Relatorio gerado com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrmRelatorioCompra.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -166,6 +166,7 @@ public class FrmRelatorioVenda extends javax.swing.JInternalFrame {
         String sql = "Select *from vendas where data_venda between '"+jFormattedTextField1.getText()+"' and '"+jFormattedTextField2.getText()+"' order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
         try {
             relatorios.RelatorioVenda.gerarRelatorio(sql);
+            JOptionPane.showMessageDialog(null, "Relatorio gerado com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrmRelatorioVenda.class.getName()).log(Level.SEVERE, null, ex);
         }
