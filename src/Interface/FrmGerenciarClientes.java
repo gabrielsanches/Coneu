@@ -6,75 +6,76 @@ import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 /*USUARIOS = CLIENTES
-*Na primeira tabela de banco de dados foi criado com o nome usuario, e 
-consequentemente fui criando tabelas, funçoes e variaveis assim, desconsiderar
-o nome usuario quando aparecer.
-*/
-
+ *Na primeira tabela de banco de dados foi criado com o nome usuario, e 
+ consequentemente fui criando tabelas, funçoes e variaveis assim, desconsiderar
+ o nome usuario quando aparecer.
+ */
 public class FrmGerenciarClientes extends javax.swing.JInternalFrame {
 // classe responsavel por todo o formulario de Cadastro de Clientes
 // pesquisar, editar, cadastrar, deletar, pesquisar
+
     Connection conecta; //É o objeto que conecta com o banco de dados
     PreparedStatement pst;
     ResultSet rs;
-    
+
     public FrmGerenciarClientes() throws ClassNotFoundException {
         initComponents();
         this.setLocation(300, 100);
         conecta = ConectaBd.conectabd();
         listarClientes(); //chama a tabela de CLIENTES sempre que abre o formulario
     }
-    
-    public void listarClientes(){
+
+    public void listarClientes() {
         String sql = "Select *from clientes order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
             rs = pst.executeQuery();
             tblClientes.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void cadastrarClientes(){ 
+
+    public void cadastrarClientes() {
     // Cadastra novo cliente, nenhum campo obrigatório
-    // O código é gerado automaticamente pelo banco de dados, em ordem crescente a partir do 1
+        // O código é gerado automaticamente pelo banco de dados, em ordem crescente a partir do 1
         String sql = "Insert into clientes(nome, cpf, cnpj, telefone, cep, endereco, cidade, uf) values(?,?,?,?,?,?,?, ?)";
+        if (txtNome.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Campo 'Cliente' é necessário para efetuar o cadastro!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            try {
+                pst = conecta.prepareStatement(sql);
+                pst.setString(1, txtNome.getText());
+                pst.setString(2, txtCpf.getText());
+                pst.setString(3, txtCnpj.getText());
+                pst.setString(4, txtTelefone.getText());
+                pst.setString(5, txtCep.getText());
+                pst.setString(6, txtEndereco.getText());
+                pst.setString(7, txtCidade.getText());
+                pst.setString(8, txtUf.getText());
+
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+                listarClientes(); //atualiza a tabela sempre que um novo cliente é cadastrado      
+            } catch (SQLException error) {
+                JOptionPane.showMessageDialog(null, error);
+            }
+        }
+    }
+
+    public void pesquisarClientes() { //Pesquisa o NOME do cliente ao começar a digitar
+        String sql = "Select *from clientes where nome like ?";
         try {
             pst = conecta.prepareStatement(sql);
-            pst.setString(1, txtNome.getText());
-            pst.setString(2, txtCpf.getText());
-            pst.setString(3, txtCnpj.getText());
-            pst.setString(4, txtTelefone.getText());
-            pst.setString(5, txtCep.getText());
-            pst.setString(6, txtEndereco.getText());
-            pst.setString(7, txtCidade.getText());
-            pst.setString(8, txtUf.getText());
-            
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!","Mensagem",JOptionPane.INFORMATION_MESSAGE);
-            listarClientes(); //atualiza a tabela sempre que um novo cliente é cadastrado      
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog(null,error);
-        }
-    }
-    
-    public void pesquisarClientes(){ //Pesquisa o NOME do cliente ao começar a digitar
-        String sql = "Select *from clientes where nome like ?";
-        try{
-            pst = conecta.prepareStatement (sql);
-            pst.setString(1, txtPesquisar.getText()+"%");//Quando usar backspace funciona tambem por causa do %
+            pst.setString(1, txtPesquisar.getText() + "%");//Quando usar backspace funciona tambem por causa do %
             rs = pst.executeQuery();
             tblClientes.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog (null, error);
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void mostraItens(){ //preenche os campos de determinado cliente ao clicar sobre ele
+
+    public void mostraItens() { //preenche os campos de determinado cliente ao clicar sobre ele
         int seleciona = tblClientes.getSelectedRow(); //mostra nos campos da tela o que clicar na tabela           
         txtCodigo.setText(tblClientes.getModel().getValueAt(seleciona, 0).toString());
         txtNome.setText(tblClientes.getModel().getValueAt(seleciona, 1).toString());
@@ -85,11 +86,11 @@ public class FrmGerenciarClientes extends javax.swing.JInternalFrame {
         txtEndereco.setText(tblClientes.getModel().getValueAt(seleciona, 6).toString());
         txtCidade.setText(tblClientes.getModel().getValueAt(seleciona, 7).toString());
         txtUf.setText(tblClientes.getModel().getValueAt(seleciona, 8).toString());
-    } 
-    
-    public void editarClientes(){
+    }
+
+    public void editarClientes() {
         String sql = "Update clientes set nome = ?, cpf = ?, cnpj = ?, telefone = ?, cep = ?, endereco = ?, cidade = ?, uf = ? where codigo = ?";
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
             pst.setString(1, txtNome.getText());
             pst.setString(2, txtCpf.getText());
@@ -103,26 +104,24 @@ public class FrmGerenciarClientes extends javax.swing.JInternalFrame {
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "Cadastro editado com sucesso");
             listarClientes();//atualiza a tabela após a edição
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void deletarClientes(){
+
+    public void deletarClientes() {
         String sql = "Delete from clientes where codigo = ?"; //se usar *from ele deleta todos os clientes!! 
         try {
             pst = conecta.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(txtCodigo.getText()));
             pst.execute();
             listarClientes();
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void limparCampos(){
+
+    public void limparCampos() {
         txtCodigo.setText("");
         txtNome.setText("");
         txtCpf.setText("");
@@ -297,7 +296,7 @@ public class FrmGerenciarClientes extends javax.swing.JInternalFrame {
         });
 
         try {
-            txtCnpj.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###############")));
+            txtCnpj.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###/####-##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }

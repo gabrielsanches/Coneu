@@ -9,69 +9,81 @@ import net.proteanit.sql.DbUtils;
 
 //Na tabela do banco de dados usei produtos_float pq pensei que nao ia funcionar
 //Ai com o _float eu saberia que o erro estava nisso e faria outra. Mas tudo certo!
-
 public class FrmGerenciarProdutos extends javax.swing.JInternalFrame {
+
     Connection conecta; //É o objeto que conecta com o banco de dados
     PreparedStatement pst;
-    ResultSet rs;  
-    
-    
+    ResultSet rs;
+
     public FrmGerenciarProdutos() throws ClassNotFoundException {
-        initComponents();       
+        initComponents();
         this.setLocation(300, 100);
         conecta = ConectaBd.conectabd();
         listarProdutos();//chama a tabela de PRODUTOS sempre que abre o formulario
     }
-    
-    public void listarProdutos(){
+
+    public void listarProdutos() {
         String sql = "Select *from produtos_float order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
             rs = pst.executeQuery();
             tblProdutos.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-     
-     public void cadastrarProdutos(){ 
+
+    public void cadastrarProdutos() {
         String sql = "Insert into produtos_float(descricao, valor_compra, valor_venda, estoque) values(?,?,?,?)";
-        try {
-            pst = conecta.prepareStatement(sql);
-            pst.setString(1, txtDescricaoProduto.getText());
-            pst.setDouble(2, Double.parseDouble(txtValorCompraProduto.getText()));
-            pst.setDouble(3, Double.parseDouble(txtValorVendaProduto.getText()));
-            pst.setInt(4, Integer.parseInt(txtEstoqueProduto.getText()));
-            
-            /*pst.setInt(9, Integer.parseInt(txtCodigo.getText()));    
-            Integer.parseInt(txtEstoqueProduto.trim()); //.trim() serve para ignorar os 'espaços' digitado pelo usuario, as vezes por engano
-            num1 = Integer.parseInt(valor.trim());*/
-            
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!","Mensagem",JOptionPane.INFORMATION_MESSAGE);
-            listarProdutos(); //atualiza a tabela sempre que um novo produto é cadastrado      
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog(null,error);
+        if (txtDescricaoProduto.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Descrição do produto é necessário!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            if (txtValorCompraProduto.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Valor de compra é necessário!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                if (txtValorVendaProduto.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Valor de venda é necessário!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    if (txtEstoqueProduto.getText().equals("")) {
+                        JOptionPane.showMessageDialog(null, "Estoque do produto é necessário!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        try {
+                            pst = conecta.prepareStatement(sql);
+                            pst.setString(1, txtDescricaoProduto.getText());
+                            pst.setDouble(2, Double.parseDouble(txtValorCompraProduto.getText()));
+                            pst.setDouble(3, Double.parseDouble(txtValorVendaProduto.getText()));
+                            pst.setInt(4, Integer.parseInt(txtEstoqueProduto.getText()));
+
+                            /*pst.setInt(9, Integer.parseInt(txtCodigo.getText()));    
+                             Integer.parseInt(txtEstoqueProduto.trim()); //.trim() serve para ignorar os 'espaços' digitado pelo usuario, as vezes por engano
+                             num1 = Integer.parseInt(valor.trim());*/
+                            pst.execute();
+                            JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+                            listarProdutos(); //atualiza a tabela sempre que um novo produto é cadastrado 
+                            limparCampos();
+                        } catch (SQLException error) {
+                            JOptionPane.showMessageDialog(null, error);
+                        }
+                    }
+                }
+            }
         }
     }
-     
-    public void pesquisarProdutos(){ //Pesquisa a DESCRIÇÃO do Produto ao começar a digitar
+
+    public void pesquisarProdutos() { //Pesquisa a DESCRIÇÃO do Produto ao começar a digitar
         String sql = "Select *from produtos_float where descricao like ?";
-        try{
-            pst = conecta.prepareStatement (sql);
-            pst.setString(1, txtPesquisarProdutos.getText()+"%");//Quando usar backspace funciona tambem por causa do %
+        try {
+            pst = conecta.prepareStatement(sql);
+            pst.setString(1, txtPesquisarProdutos.getText() + "%");//Quando usar backspace funciona tambem por causa do %
             //int estoque = rs.getInt(0); PRA FAZER O ESTOQUE
             rs = pst.executeQuery();
             tblProdutos.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog (null, error);
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void mostraItens(){ //preenche os campos de determinado usuario ao clicar sobre ele
+
+    public void mostraItens() { //preenche os campos de determinado usuario ao clicar sobre ele
         int seleciona = tblProdutos.getSelectedRow(); //mostra nos campos da tela o que clicar na tabela           
         txtCodigoProduto.setText(tblProdutos.getModel().getValueAt(seleciona, 0).toString());
         txtDescricaoProduto.setText(tblProdutos.getModel().getValueAt(seleciona, 1).toString());
@@ -79,52 +91,47 @@ public class FrmGerenciarProdutos extends javax.swing.JInternalFrame {
         txtValorVendaProduto.setText(tblProdutos.getModel().getValueAt(seleciona, 3).toString());
         txtEstoqueProduto.setText(tblProdutos.getModel().getValueAt(seleciona, 4).toString());
     }
-    
-    public void deletarProdutos(){
+
+    public void deletarProdutos() {
         String sql = "Delete from produtos_float where codigo = ?"; //se usar *from ele deleta todos os clientes!! 
         try {
             pst = conecta.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(txtCodigoProduto.getText()));
             pst.execute();
             listarProdutos();
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void limparCampos(){
+
+    public void limparCampos() {
         txtCodigoProduto.setText("");
         txtDescricaoProduto.setText("");
         txtValorVendaProduto.setText("");
         txtValorCompraProduto.setText("");
         txtEstoqueProduto.setText("");
     }
-    
-     public void editarProdutos(){
+
+    public void editarProdutos() {
         String sql = "Update produtos_float set descricao = ?, valor_Compra = ?, valor_venda = ?, estoque = ? where codigo = ?";
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
-            
+
             pst.setString(1, txtDescricaoProduto.getText());
             pst.setDouble(2, Double.parseDouble(txtValorCompraProduto.getText()));
             pst.setDouble(3, Double.parseDouble(txtValorVendaProduto.getText()));
             pst.setInt(4, Integer.parseInt(txtEstoqueProduto.getText()));
-            
+
             //pst.setInt(4, Integer.parseInt(txtEstoqueProduto.getText())+a); // PRA FAZER O ESTOQUE
-            
-            
             pst.setInt(5, Integer.parseInt(txtCodigoProduto.getText()));
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "Produto editado com sucesso");
             listarProdutos();//atualiza a tabela após a edição
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
 
-     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -345,12 +352,10 @@ public class FrmGerenciarProdutos extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         cadastrarProdutos();
-        limparCampos();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         deletarProdutos();
-        limparCampos();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

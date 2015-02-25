@@ -1,77 +1,78 @@
 package Interface;
+
 import DAL.ConectaBd;
 import java.sql.*;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 /*
-Na tabela de banco de dados dos fornecedores a primary key ta como codigofornecedore_pk
-*/
-
+ Na tabela de banco de dados dos fornecedores a primary key ta como codigofornecedore_pk
+ */
 public class FrmGerenciarFornecedores extends javax.swing.JInternalFrame {
-    
+
     Connection conecta; //É o objeto que conecta com o banco de dados
     PreparedStatement pst;
     ResultSet rs;
-    
+
     public FrmGerenciarFornecedores() throws ClassNotFoundException {
         initComponents();
         this.setLocation(300, 110);
         conecta = ConectaBd.conectabd();
         listarFornecedores(); //chama a tabela de FORNECEDORES sempre que abre o formulario
     }
-    
-    public void listarFornecedores(){
+
+    public void listarFornecedores() {
         String sql = "Select *from fornecedores order by codigo Asc"; //orderna pelo numero do codigo ascendentemente
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
             rs = pst.executeQuery();
             tblFornecedores.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void cadastrarFornecedores(){ 
+
+    public void cadastrarFornecedores() {
     // Cadastra novo usuario, nenhum campo obrigatório
-    // O código é gerado automaticamente pelo banco de dados, em ordem crescente a partir do 1
+        // O código é gerado automaticamente pelo banco de dados, em ordem crescente a partir do 1
         String sql = "Insert into fornecedores(fornecedor, cpf, cnpj, telefone, cep, endereco, cidade, uf, email) values(?,?,?,?,?,?,?,?,?)";
-        try {
-            pst = conecta.prepareStatement(sql);
-            pst.setString(1, txtFornecedor.getText());
-            pst.setString(2, txtCpfFornecedor.getText());
-            pst.setString(3, txtCnpjFornecedor.getText());
-            pst.setString(4, txtTelefoneFornecedor.getText());
-            pst.setString(5, txtCepFornecedor.getText());
-            pst.setString(6, txtEnderecoFornecedor.getText());
-            pst.setString(7, txtCidadeFornecedor.getText());
-            pst.setString(8, txtUfFornecedor.getText());
-            pst.setString(9, txtEmailFornecedor.getText());
-            
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Fornecedor cadastrado com sucesso!","Mensagem",JOptionPane.INFORMATION_MESSAGE);
-            listarFornecedores(); //atualiza a tabela sempre que um novo fornecedor é cadastrado      
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog(null,error);
+        if (txtFornecedor.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Campo 'Fornecedor' é necessário para efetuar o cadastro!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            try {
+                pst = conecta.prepareStatement(sql);
+                pst.setString(1, txtFornecedor.getText());
+                pst.setString(2, txtCpfFornecedor.getText());
+                pst.setString(3, txtCnpjFornecedor.getText());
+                pst.setString(4, txtTelefoneFornecedor.getText());
+                pst.setString(5, txtCepFornecedor.getText());
+                pst.setString(6, txtEnderecoFornecedor.getText());
+                pst.setString(7, txtCidadeFornecedor.getText());
+                pst.setString(8, txtUfFornecedor.getText());
+                pst.setString(9, txtEmailFornecedor.getText());
+
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Fornecedor cadastrado com sucesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+                listarFornecedores(); //atualiza a tabela sempre que um novo fornecedor é cadastrado      
+            } catch (SQLException error) {
+                JOptionPane.showMessageDialog(null, error);
+            }
         }
     }
-    
-    public void pesquisarFornecedores(){ //Pesquisa o NOME do FORNECEDOR ao começar a digitar
+
+    public void pesquisarFornecedores() { //Pesquisa o NOME do FORNECEDOR ao começar a digitar
         String sql = "Select *from fornecedores where fornecedor like ?";
-        try{
+        try {
             pst = conecta.prepareStatement(sql); //conecta é o metodo que chama pra conectar com o banco d dados
-            pst.setString(1, txtPesquisarFornecedores.getText()+"%");//Quando usar backspace funciona tambem por causa do %
+            pst.setString(1, txtPesquisarFornecedores.getText() + "%");//Quando usar backspace funciona tambem por causa do %
             rs = pst.executeQuery();
             tblFornecedores.setModel(DbUtils.resultSetToTableModel(rs));
-        }
-        catch(SQLException error){
-            JOptionPane.showMessageDialog (null, error);
+        } catch (SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void mostraItens(){ //preenche os campos de determinado usuario ao clicar sobre ele
+
+    public void mostraItens() { //preenche os campos de determinado usuario ao clicar sobre ele
         int seleciona = tblFornecedores.getSelectedRow(); //mostra nos campos da tela o que clicar na tabela           
         txtCodigoFornecedor.setText(tblFornecedores.getModel().getValueAt(seleciona, 0).toString());
         txtFornecedor.setText(tblFornecedores.getModel().getValueAt(seleciona, 1).toString());
@@ -83,11 +84,11 @@ public class FrmGerenciarFornecedores extends javax.swing.JInternalFrame {
         txtCidadeFornecedor.setText(tblFornecedores.getModel().getValueAt(seleciona, 7).toString());
         txtUfFornecedor.setText(tblFornecedores.getModel().getValueAt(seleciona, 8).toString());
         txtEmailFornecedor.setText(tblFornecedores.getModel().getValueAt(seleciona, 9).toString());
-    } 
-    
-    public void editarFornecedores(){
+    }
+
+    public void editarFornecedores() {
         String sql = "Update fornecedores set fornecedor = ?, cpf = ?, cnpj = ?, telefone = ?, cep = ?, endereco = ?, cidade = ?, uf = ?, email = ? where codigo = ?";
-        try{
+        try {
             pst = conecta.prepareStatement(sql);
             pst.setString(1, txtFornecedor.getText());
             pst.setString(2, txtCpfFornecedor.getText());
@@ -102,26 +103,24 @@ public class FrmGerenciarFornecedores extends javax.swing.JInternalFrame {
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "Cadastro editado com sucesso");
             listarFornecedores();//atualiza a tabela após a edição
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void deletarFornecedores(){
+
+    public void deletarFornecedores() {
         String sql = "Delete from fornecedores where codigo = ?"; //se usar *from ele deleta todos os clientes!! 
         try {
             pst = conecta.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(txtCodigoFornecedor.getText()));
             pst.execute();
             listarFornecedores();
-        }
-        catch(SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error);
         }
     }
-    
-    public void limparCampos(){
+
+    public void limparCampos() {
         txtCodigoFornecedor.setText("");
         txtFornecedor.setText("");
         txtCpfFornecedor.setText("");
@@ -133,7 +132,7 @@ public class FrmGerenciarFornecedores extends javax.swing.JInternalFrame {
         txtUfFornecedor.setText("");
         txtEmailFornecedor.setText("");
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -291,7 +290,7 @@ public class FrmGerenciarFornecedores extends javax.swing.JInternalFrame {
         txtCepFornecedor.setToolTipText("Digite somente números");
 
         try {
-            txtCnpjFornecedor.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###############")));
+            txtCnpjFornecedor.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###/####-##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -456,7 +455,7 @@ public class FrmGerenciarFornecedores extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txtPesquisarFornecedoresKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarFornecedoresKeyReleased
-       pesquisarFornecedores();
+        pesquisarFornecedores();
     }//GEN-LAST:event_txtPesquisarFornecedoresKeyReleased
 
     private void tblFornecedoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblFornecedoresMouseClicked
