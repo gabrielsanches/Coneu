@@ -337,6 +337,12 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
             }
         });
 
+        valor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                valorKeyReleased(evt);
+            }
+        });
+
         valor_total.setEditable(false);
         valor_total.setBackground(new java.awt.Color(102, 153, 255));
         valor_total.addActionListener(new java.awt.event.ActionListener() {
@@ -398,13 +404,13 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
                     .addComponent(txtProdutoEfetuarCompra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(8, 8, 8)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(quantidade_produto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(8, 8, 8)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(valor_total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -542,6 +548,10 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
     private void quantidade_produtoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantidade_produtoKeyReleased
         calcular_valor();
     }//GEN-LAST:event_quantidade_produtoKeyReleased
+
+    private void valorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valorKeyReleased
+        calcular_valor();
+    }//GEN-LAST:event_valorKeyReleased
 
     private void calcular_valor() {
         if (!quantidade_produto.getText().equals("") && !valor.getText().equals(""))
