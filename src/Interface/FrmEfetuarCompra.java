@@ -526,24 +526,24 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /*public void baixaCompra() {
-        String sql = "select estoque from produtos_float where codigo=" + Integer.parseInt(txtCodigoProdutoEfetuarCompra.getText());
-        int estoque;
-        try {
-            Statement comando = conecta.createStatement();
-            ResultSet rs = comando.executeQuery(sql);
-            rs.next();
-            estoque = rs.getInt(1);
+     String sql = "select estoque from produtos_float where codigo=" + Integer.parseInt(txtCodigoProdutoEfetuarCompra.getText());
+     int estoque;
+     try {
+     Statement comando = conecta.createStatement();
+     ResultSet rs = comando.executeQuery(sql);
+     rs.next();
+     estoque = rs.getInt(1);
 
-            sql = "Update produtos_float set estoque=? where codigo=?";
+     sql = "Update produtos_float set estoque=? where codigo=?";
 
-            pst = conecta.prepareStatement(sql);
-            pst.setInt(1, estoque + Integer.parseInt(quantidade_produto.getText()));
-            pst.setInt(2, Integer.parseInt(txtCodigoProdutoEfetuarCompra.getText()));
-            pst.execute();
-        } catch (SQLException ex) {
-            Logger.getLogger(FrmEfetuarVenda.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }*/
+     pst = conecta.prepareStatement(sql);
+     pst.setInt(1, estoque + Integer.parseInt(quantidade_produto.getText()));
+     pst.setInt(2, Integer.parseInt(txtCodigoProdutoEfetuarCompra.getText()));
+     pst.execute();
+     } catch (SQLException ex) {
+     Logger.getLogger(FrmEfetuarVenda.class.getName()).log(Level.SEVERE, null, ex);
+     }
+     }*/
 
     private void quantidade_produtoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantidade_produtoKeyReleased
         calcular_valor();
@@ -554,8 +554,9 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_valorKeyReleased
 
     private void calcular_valor() {
-        if (!quantidade_produto.getText().equals("") && !valor.getText().equals(""))
+        if (!quantidade_produto.getText().equals("") && !valor.getText().equals("")) {
             valor_total.setText(Float.toString(Float.parseFloat(quantidade_produto.getText()) * Float.parseFloat(valor.getText())));
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
