@@ -520,6 +520,10 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtFornecedorEfetuarCompraActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+//        if (valor.getText().contains(",")) {
+//            String aux[] = valor.getText().split(",");
+//            valor.setText(aux[0] + "." + aux[1]);
+//        }
         cadastrarCompras();
 
         limparProduto();
@@ -550,6 +554,10 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_quantidade_produtoKeyReleased
 
     private void valorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valorKeyReleased
+        if (valor.getText().contains(",")) {
+            String aux[] = valor.getText().split(",");
+            valor.setText(aux[0] + "." + aux[1]);
+        }
         calcular_valor();
     }//GEN-LAST:event_valorKeyReleased
 

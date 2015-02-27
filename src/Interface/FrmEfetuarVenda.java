@@ -145,8 +145,9 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
     }
 
     private void calcular_valor() {
-        if (!quantidade_venda.getText().equals("") && !valor.getText().equals(""))
+        if (!quantidade_venda.getText().equals("") && !valor.getText().equals("")) {
             valor_total.setText(Float.toString(Float.parseFloat(quantidade_venda.getText()) * Float.parseFloat(valor.getText())));
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -491,6 +492,10 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_codigo_produtoActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+//        if (valor.getText().contains(",")){
+//            String aux[]=valor.getText().split(",");
+//            valor.setText(aux[0]+"."+aux[1]);
+//        }
         cadastrarVendas();
         limparProduto();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -548,7 +553,11 @@ public class FrmEfetuarVenda extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_valorActionPerformed
 
     private void valorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valorKeyReleased
-       calcular_valor();
+        if (valor.getText().contains(",")) {
+            String aux[] = valor.getText().split(",");
+            valor.setText(aux[0] + "." + aux[1]);
+        }
+        calcular_valor();
     }//GEN-LAST:event_valorKeyReleased
 
 
