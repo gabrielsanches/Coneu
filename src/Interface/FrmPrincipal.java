@@ -166,6 +166,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jMenu6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/door.png"))); // NOI18N
         jMenu6.setText("Estoque");
 
+        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/door_in.png"))); // NOI18N
         jMenuItem5.setText("Entrada de Produtos");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
@@ -175,6 +176,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         });
         jMenu6.add(jMenuItem5);
 
+        jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F8, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/door_open.png"))); // NOI18N
         jMenuItem6.setText("Estoque Atual");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
@@ -375,7 +377,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
         if (acesso == false) {
-            JOptionPane.showMessageDialog(null, "Usuário possui acesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Usuário não possui acesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
         } else {
             FrmGerenciarVendas form = null;
             try {
@@ -390,7 +392,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
         if (acesso == false) {
-            JOptionPane.showMessageDialog(null, "Usuário possui acesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Usuário não possui acesso!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
         } else {
 
             FrmGerenciarCompras form = null;
