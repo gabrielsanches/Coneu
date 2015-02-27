@@ -555,8 +555,9 @@ public class FrmEfetuarCompra extends javax.swing.JInternalFrame {
 
     private void valorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valorKeyReleased
         if (valor.getText().contains(",")) {
-            String aux[] = valor.getText().split(",");
-            valor.setText(aux[0] + "." + aux[1]);
+            String aux = valor.getText();
+            aux = aux.replace(",", ".");
+            valor.setText(aux);
         }
         calcular_valor();
     }//GEN-LAST:event_valorKeyReleased

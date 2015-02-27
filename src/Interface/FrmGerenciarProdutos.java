@@ -393,16 +393,18 @@ public class FrmGerenciarProdutos extends javax.swing.JInternalFrame {
 
     private void txtValorCompraProdutoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorCompraProdutoKeyReleased
         if (txtValorCompraProduto.getText().contains(",")) {
-            String aux[] = txtValorCompraProduto.getText().split(",");
-            txtValorCompraProduto.setText(aux[0] + "." + aux[1]);
-        }   
+            String aux = txtValorCompraProduto.getText();
+            aux = aux.replace(",", ".");
+            txtValorCompraProduto.setText(aux);
+        }
     }//GEN-LAST:event_txtValorCompraProdutoKeyReleased
 
     private void txtValorVendaProdutoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorVendaProdutoKeyReleased
         if (txtValorVendaProduto.getText().contains(",")) {
-            String aux[] = txtValorVendaProduto.getText().split(",");
-            txtValorVendaProduto.setText(aux[0] + "." + aux[1]);
-        }       
+            String aux = txtValorVendaProduto.getText();
+            aux = aux.replace(",", ".");
+            txtValorVendaProduto.setText(aux);
+        }
     }//GEN-LAST:event_txtValorVendaProdutoKeyReleased
 
 
