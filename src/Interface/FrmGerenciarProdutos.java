@@ -177,9 +177,25 @@ public class FrmGerenciarProdutos extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblProdutos);
 
+        txtValorCompraProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtValorCompraProdutoActionPerformed(evt);
+            }
+        });
+        txtValorCompraProduto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtValorCompraProdutoKeyReleased(evt);
+            }
+        });
+
         txtValorVendaProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtValorVendaProdutoActionPerformed(evt);
+            }
+        });
+        txtValorVendaProduto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtValorVendaProdutoKeyReleased(evt);
             }
         });
 
@@ -370,6 +386,24 @@ public class FrmGerenciarProdutos extends javax.swing.JInternalFrame {
     private void txtPesquisarProdutosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarProdutosKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPesquisarProdutosKeyPressed
+
+    private void txtValorCompraProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtValorCompraProdutoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtValorCompraProdutoActionPerformed
+
+    private void txtValorCompraProdutoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorCompraProdutoKeyReleased
+        if (txtValorCompraProduto.getText().contains(",")) {
+            String aux[] = txtValorCompraProduto.getText().split(",");
+            txtValorCompraProduto.setText(aux[0] + "." + aux[1]);
+        }   
+    }//GEN-LAST:event_txtValorCompraProdutoKeyReleased
+
+    private void txtValorVendaProdutoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorVendaProdutoKeyReleased
+        if (txtValorVendaProduto.getText().contains(",")) {
+            String aux[] = txtValorVendaProduto.getText().split(",");
+            txtValorVendaProduto.setText(aux[0] + "." + aux[1]);
+        }       
+    }//GEN-LAST:event_txtValorVendaProdutoKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
